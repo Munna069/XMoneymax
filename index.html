@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Money Pro Dashboard</title>
+  <style>
+    /* Reset & Basic */
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f2f2f2;
+      margin: 0;
+      padding-bottom: 70px; /* Nav height */
+      color: #333;
+    }
+    header {
+      background-color: #007BFF;
+      color: white;
+      padding: 15px 20px;
+      display: flex;
+      align-items: center;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    header img {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      margin-right: 15px;
+      object-fit: cover;
+      border: 2px solid white;
+    }
+    .user-info h2 {
+      margin: 0 0 4px 0;
+      font-weight: 700;
+      font-size: 22px;
+    }
+    .user-info p {
+      margin: 0;
+      font-weight: 600;
+      font-size: 18px;
+    }
+
+    /* Cards */
+    .card, .balance-card, .income-box {
+      background: white;
+      margin: 15px 20px;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+    }
+    .card h3, .balance-card h2, .income-box h3 {
+      margin-top: 0;
+      font-weight: 700;
+    }
+    .card p {
+      font-size: 16px;
+      margin: 8px 0 15px 0;
+    }
+
+    /* Balance card special */
+    .balance-card {
+      background: #007BFF;
+      color: white;
+      position: relative;
+      text-align: center;
+    }
+    .balance-card h2 {
+      font-size: 40px;
+      margin-bottom: 5px;
+    }
+    .balance-card p {
+      font-size: 16px;
+      margin-top: 0;
+      margin-bottom: 15px;
+      font-weight: 500;
+    }
+    .refer-btn {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      background: white;
+      color: #007BFF;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 30px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    .refer-btn:hover {
+      background-color: #0056b3;
+      color: white;
+    }
+
+    /* Buttons */
+    .earn-button, .btn {
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      padding: 14px 28px;
+      font-size: 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 700;
+      margin: 8px 5px 8px 0;
+      transition: background-color 0.3s ease;
+    }
+    .earn-button:hover, .btn:hover {
+      background-color: #0056b3;
+    }
+
+    /* Income Box */
+    .income-box {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      text-align: center;
+    }
+
+    /* Navigation */
+    nav {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      background: linear-gradient(to right, #6a11cb, #2575fc);
+      display: flex;
+      justify-content: space-around;
+      padding: 10px 0;
+      box-shadow: 0 -3px 10px rgba(0,0,0,0.3);
+      z-index: 1000;
+    }
+    nav button {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 14px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+      transition: color 0.3s ease;
+      padding: 2px 6px;
+    }
+    nav button:hover {
+      color: #ffdd57;
+    }
+    nav .icon {
+      font-size: 22px;
+      margin-bottom: 3px;
+      line-height: 1;
+    }
+
+    /* Responsive */
+    @media (max-width: 480px) {
+      .card, .balance-card, .income-box {
+        margin: 10px 12px;
+        padding: 15px;
+      }
+      .earn-button, .btn {
+        padding: 12px 20px;
+        font-size: 14px;
+      }
+      header h2 {
+        font-size: 20px;
+      }
+      header p {
+        font-size: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="https://yt3.googleusercontent.com/ytc/AOPolaTSm7-SOME-IMAGE-ID=s88-c-k-c0x00ffffff-no-rj" alt="User" />
+    <div class="user-info">
+      <h2>SKM YT</h2>
+      <p>৳ <span id="balance">0.00</span></p>
+    </div>
+  </header>
+
+  <div class="card">
+    <h3>Earn Rewards</h3>
+    <p>Task Completed: <span id="completed">0</span>/100</p>
+    <button class="earn-button" onclick="startEarning()">Earn Now ▶</button>
+  </div>
+
+  <div class="balance-card">
+    <h2>৳ <span id="mainBalance">0.00</span></h2>
+    <p>Total Earnings</p>
+    <button class="refer-btn" onclick="showRefer()">👥 Refer & Earn</button>
+  </div>
+
+  <div class="income-box">
+    <h3 style="width: 100%; text-align: center;">আপনার ইনকাম প্যানেল</h3>
+    <button class="btn" onclick="checkWithdraw()">💳 উইথড্র করুন</button>
+    <button class="btn" onclick="showStats()">📊 উপার্জনের হিসাব</button>
+    <button class="btn" onclick="showMessage()">🎬 ভিডিও ক্লিক</button>
+  </div>
+
+  <nav>
+    <button onclick="goTo('home')">
+      <div class="icon">🏠</div>
+      <span>Home</span>
+    </button>
+    </button>
+    <button onclick="checkWithdraw()">
+      <div class="icon">📤</div>
+      <span>Withdraw</span>
+    </button>
+    <button onclick="showStats()">
+      <div class="icon">👤</div>
+      <span>Profile</span>
+    </button>
+  </nav>
+
+  <script>
+    let balance = parseFloat(localStorage.getItem('balance')) || 0;
+    let completed = parseInt(localStorage.getItem('completed')) || 0;
+    const adLink = "https://pillowcaselogic.com/xrset3wz?key=a0c4eb18fd1c49a83d5d832502a3ebbc";
+
+    function updateUI() {
+      document.getElementById('balance').innerText = balance.toFixed(2);
+      document.getElementById('mainBalance').innerText = balance.toFixed(2);
+      document.getElementById('completed').innerText = completed;
+    }
+
+    function startEarning() {
+      if (completed >= 100) {
+        alert("আজকের টাস্ক শেষ! কাল আবার চেষ্টা করুন।");
+        return;
+      }
+      // Earn random between 0.5 to 1.5
+      let earn = parseFloat((Math.random() * (1.5 - 0.5) + 0.5).toFixed(2));
+      balance += earn;
+      completed++;
+      localStorage.setItem('balance', balance);
+      localStorage.setItem('completed', completed);
+      updateUI();
+      // Open ad in new tab
+      window.open(adLink, '_blank');
+    }
+
+    function checkWithdraw() {
+      if (balance >= 3000) {
+        alert("✅ আপনি উইথড্র করতে পারবেন! \nমেসেজ পাঠানো হচ্ছে...");
+        const message = encodeURIComponent(`নতুন উইথড্র রিকুয়েস্ট:\nনাম: SKM YT\nব্যালেন্স: ৳${balance.toFixed(2)}`);
+        window.open(`https://t.me/share/url?url=&text=${message}`);
+      } else {
+        alert("⚠️ ৩০০০ টাকা না হলে উইথড্র সম্ভব নয়।");
+      }
+    }
+
+    function showStats() {
+      alert(`🔥 আপনার উপার্জন বিবরণ:\n\n🔸 মোট আয়: ৳${balance.toFixed(2)}\n🔸 মোট অ্যাড ক্লিক: ${completed} বার\n🔸 মোট উত্তোলন: ৳0`);
+    }
+
+    function showMessage() {
+      alert("এই ফিচারটি চালু করতে আপনার অ্যাকাউন্টে ৩০০০ টাকা পূর্ণ করতে হবে।");
+    }
+
+    function showRefer() {
+      alert("👥 রেফার ফিচারটি খুব শীঘ্রই আসছে!");
+    }
+
+    function goTo(tab) {
+      alert(`'${tab}' পেজ এখনো যুক্ত হয়নি।`);
+    }
+
+    // Initialize UI
+    updateUI();
+  </script>
+</body>
+</html>
